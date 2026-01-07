@@ -5,14 +5,8 @@ const MAIN_CHAT_ID = "-1002812438721";
 
 const ALLOWED_METHODS = ["sendMessage", "deleteMessage"];
 
-const handler = async (req, context) => {
-  if (req.method !== "POST") {
-    return new Response(
-      JSON.stringify({ error: "Method not allowed. Use POST." }),
-      { status: 405, headers: { "Content-Type": "application/json" } }
-    );
-  }
-
+export default async (req, context) => {
+  // Handle CORS preflight request
   if (req.method === "OPTIONS") {
     return new Response(null, {
       status: 204,
@@ -22,6 +16,13 @@ const handler = async (req, context) => {
         "Access-Control-Allow-Headers": "Content-Type",
       },
     });
+  }
+
+  if (req.method !== "POST") {
+    return new Response(
+      JSON.stringify({ error: "Method not allowed. Use POST." }),
+      { status: 405, headers: { "Content-Type": "application/json" } }
+    );
   }
 
   try {
@@ -80,9 +81,3 @@ const handler = async (req, context) => {
     );
   }
 };
-
-export const config = {
-  path: "/.netlify/functions/telegram-proxy",
-};
-
-export default handler;
